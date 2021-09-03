@@ -11,11 +11,12 @@ import '../../styles/auth.scss'
 import './styles.scss'
 
 export function Login() {
+    const history = useHistory()
+    const { signIn } = useAuth()
+    
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const history = useHistory()
-    const { signIn } = useAuth()
 
     async function handleLogin(event: FormEvent) {
         event.preventDefault()

@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from "react"
+import { createContext, ReactNode, useEffect, useState } from "react"
+import { useHistory } from "react-router"
 
 import api from '../services/api'
 
@@ -11,8 +12,8 @@ type User = {
     name: string
     avatar: string
     email: string
-    createdAt: string
-    updatedAt: string
+    created_at: string
+    updated_at: string
 }
 
 type AuthContextData = {
@@ -20,37 +21,38 @@ type AuthContextData = {
     token: string,
     signed: boolean,
     signIn: (email: string, password: string) => Promise<void>
+    signOut: () => void
 }
 
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
+    const history = useHistory()
+
+    const TOKEN_KEY = '@letmeask-token'
+    const USER_KEY = '@letmeask-user'
 
     const [user, setUser] = useState<User>();
     const [signed, setSigned] = useState(false);
     const [token, setToken] = useState('');
 
-    // useEffect(() => {
-    //     const unsubscribe = auth.onAuthStateChanged(user => {
-    //         if (user) {
-    //             const { displayName, photoURL, uid } = user
+    function setAuthState(authUser: User | undefined, token: string) {
+        setUser(authUser)
+        setToken(token)
+        setSigned(authUser !== undefined)
 
-    //             if (!displayName || !photoURL) {
-    //                 throw new Error('Missing information from Google Account')
-    //             }
+        api.defaults.headers.Authorization = `Bearer ${token}`;
+    }
 
-    //             setUser({
-    //                 id: uid,
-    //                 name: displayName,
-    //                 avatar: photoURL
-    //             })
-    //         }
-    //     })
+    useEffect(() => {
+        const token = window.localStorage.getItem(TOKEN_KEY);
+        const userSerialized = window.localStorage.getItem(USER_KEY);
 
-    //     return () => {
-    //         unsubscribe()
-    //     }
-    // }, [])
+        if (userSerialized != null && token != null) {
+            const authUser = JSON.parse(userSerialized)
+            setAuthState(authUser, token)
+        }
+    }, [])
 
     async function signIn(email: string, password: string) {
         const response = await api.post('login', {
@@ -58,23 +60,19 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
             password
         })
 
-        const { user, access_token: token, token_type } = response.data;
+        const { user: authUser, access_token: token } = response.data;
 
-        api.defaults.headers.Authorization = `${token_type} ${token}`;
+        setAuthState(authUser, token)
 
-        setUser({
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-            email: user.email,
-            createdAt: user.created_at,
-            updatedAt: user.updated_at,
-        })
+        window.localStorage.setItem(TOKEN_KEY, token);
+        window.localStorage.setItem(USER_KEY, JSON.stringify(authUser));
+    }
 
-        setToken(token)
-        setSigned(true)
-
-        // TODO salvar token no local storage
+    function signOut() {
+        window.localStorage.removeItem(TOKEN_KEY);
+        window.localStorage.removeItem(USER_KEY);
+        setAuthState(undefined, '')
+        history.push('/')
     }
 
     return (
@@ -83,6 +81,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
             signIn,
             signed,
             token,
+            signOut
         }}>
             {children}
         </AuthContext.Provider>
