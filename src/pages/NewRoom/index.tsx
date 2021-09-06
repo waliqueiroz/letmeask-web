@@ -6,7 +6,7 @@ import '../../styles/auth.scss'
 import { Link, useHistory } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { FormEvent, useState } from 'react'
-import { database } from '../../services/firebase'
+import api from '../../services/api'
 
 export function NewRoom() {
     const { user } = useAuth()
@@ -14,22 +14,27 @@ export function NewRoom() {
 
     const [newRoom, setNewRoom] = useState('')
 
-    function handleCreateRoom(event: FormEvent) {
+    async function handleCreateRoom(event: FormEvent) {
         event.preventDefault()
 
         if (newRoom.trim() === '') {
             return
         }
 
-        const roomRef = database.ref('rooms');
+        try {
+            const response = await api.post('/rooms', {
+                title: newRoom,
+                author: {
+                    id: user?.id,
+                    name: user?.name,
+                    avatar: user?.avatar
+                }
+            })
 
-        const firebaseRoom = roomRef.push({
-            title: newRoom,
-            authorId: user?.id
-        })
-
-
-        history.push(`/rooms/${firebaseRoom.key}`)
+            history.push(`/rooms/${response.data.id}`)
+        } catch (error) {
+            alert("Houve um erro ao criar a sala.")
+        }
     }
 
     return (

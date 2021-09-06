@@ -1,14 +1,33 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useAuth } from "./useAuth"
 
-import { database } from '../services/firebase'
+import api from "../services/api"
 
-type QuestionType = {
+type Author = {
     id: string,
-    author: {
-        name: string,
-        avatar: string,
-    },
+    name: string,
+    avatar: string
+}
+
+type Like = {
+    id: string,
+    author: Author,
+    created_at: string,
+}
+
+type Question = {
+    id: string,
+    content: string,
+    is_highlighted: boolean,
+    is_answered: boolean,
+    author: Author,
+    likes: Like[],
+    created_at: string,
+}
+
+type ParsedQuestion = {
+    id: string,
+    author: Author,
     content: string,
     isAnswered: boolean,
     isHighlighted: boolean,
@@ -16,53 +35,44 @@ type QuestionType = {
     likeId: string | undefined,
 }
 
-type FirebaseQuestions = Record<string, {
-    author: {
-        name: string,
-        avatar: string,
-    },
-    content: string,
-    isAnswered: boolean,
-    isHighlighted: boolean,
-    likes: Record<string, {
-        authorId: string
-    }>
-}>
-
 export function useRoom(roomId: string) {
     const { user } = useAuth()
-    const [questions, setQuestions] = useState<QuestionType[]>([])
+    const [questions, setQuestions] = useState<ParsedQuestion[]>([])
     const [title, setTitle] = useState('')
 
-    useEffect(() => {
-        const roomRef = database.ref(`rooms/${roomId}`)
+    const getRoom = useCallback(async () => {
+        try {
+            const response = await api.get(`/rooms/${roomId}`)
 
-        roomRef.on('value', room => {
-            const databaseRoom = room.val()
-            const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {}
+            const { data } = response;
 
-            const parsedQuestions = Object.entries(firebaseQuestions).map(([key, value]) => {
+            const questions: Question[] = data.questions ?? []
+
+            const parsedQuestions: ParsedQuestion[] = questions.map((question: Question) => {
                 return {
-                    id: key,
-                    content: value.content,
-                    author: value.author,
-                    isAnswered: value.isAnswered,
-                    isHighlighted: value.isHighlighted,
-                    likeCount: Object.values(value.likes ?? {}).length,
-                    likeId: Object.entries(value.likes ?? {}).find(([key, like]) => like.authorId === user?.id)?.[0]
+                    id: question.id,
+                    content: question.content,
+                    author: question.author,
+                    isAnswered: question.is_answered,
+                    isHighlighted: question.is_highlighted,
+                    likeCount: question.likes ? question.likes.length : 0,
+                    likeId: question.likes ? question.likes.find((like: Like) => like.author.id === user?.id)?.id : undefined
                 }
             })
 
-            setTitle(databaseRoom.title)
+            setTitle(data.title)
             setQuestions(parsedQuestions)
-        })
-
-        return () => {
-            roomRef.off('value')
+        } catch (error) {
+            console.log(error)
+            alert("Houve um erro ao recuperar as perguntas")
         }
     }, [roomId, user?.id])
 
+    useEffect(() => {
+        getRoom()
+    }, [getRoom])
+
     return {
-        questions, title
+        questions, title, getRoom
     }
 }

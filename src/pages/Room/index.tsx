@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 
 import { useAuth } from '../../hooks/useAuth'
 import { useRoom } from '../../hooks/useRoom'
-import { database } from '../../services/firebase'
 
 import { Button } from '../../components/Button'
 import { RoomCode } from '../../components/RoomCode'
@@ -12,6 +11,7 @@ import logoImg from '../../assets/images/logo.svg'
 
 import '../../styles/room.scss'
 import { Question } from '../../components/Question'
+import api from '../../services/api'
 
 type RoomParams = {
     id: string
@@ -23,7 +23,7 @@ export function Room() {
     const [newQuestion, setNewQuestion] = useState('')
     const roomId = params.id
 
-    const { questions, title } = useRoom(roomId)
+    const { questions, title, getRoom } = useRoom(roomId)
 
     async function handleSendQuestion(event: FormEvent) {
         event.preventDefault()
@@ -33,12 +33,13 @@ export function Room() {
         }
 
         if (!user) {
-            throw new Error('You must be logged in')
+            throw new Error('Você precisa fazer login para enviar uma pergunta.')
         }
 
         const question = {
             content: newQuestion,
             author: {
+                id: user.id,
                 name: user.name,
                 avatar: user.avatar,
             },
@@ -46,18 +47,34 @@ export function Room() {
             isAnswered: false,
         }
 
-        await database.ref(`rooms/${roomId}/questions`).push(question)
-
-        setNewQuestion('')
+        try {
+            await api.post(`rooms/${roomId}/questions`, question)
+            setNewQuestion('')
+            getRoom()
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro ao salvar a pergunta.')
+        }
     }
 
     async function handleLikeQuestion(questionId: string, likeId: string | undefined) {
-        if (likeId) {
-            await database.ref(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`).remove()
-        } else {
-            await database.ref(`rooms/${roomId}/questions/${questionId}/likes`).push({
-                authorId: user?.id,
-            })
+        try {
+            if (likeId) {
+                await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
+            } else {
+                await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
+                    author: {
+                        id: user?.id,
+                        name: user?.name,
+                        avatar: user?.avatar,
+                    }
+                })
+            }
+
+            getRoom()
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro.')
         }
     }
 
