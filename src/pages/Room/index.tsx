@@ -9,9 +9,9 @@ import { RoomCode } from '../../components/RoomCode'
 
 import logoImg from '../../assets/images/logo.svg'
 
-import '../../styles/room.scss'
 import { Question } from '../../components/Question'
-import api from '../../services/api'
+
+import '../../styles/room.scss'
 
 type RoomParams = {
     id: string
@@ -23,7 +23,7 @@ export function Room() {
     const [newQuestion, setNewQuestion] = useState('')
     const roomId = params.id
 
-    const { questions, title, getRoom } = useRoom(roomId)
+    const { questions, title, sendQuestion, likeQuestion } = useRoom(roomId)
 
     async function handleSendQuestion(event: FormEvent) {
         event.preventDefault()
@@ -36,46 +36,8 @@ export function Room() {
             throw new Error('Você precisa fazer login para enviar uma pergunta.')
         }
 
-        const question = {
-            content: newQuestion,
-            author: {
-                id: user.id,
-                name: user.name,
-                avatar: user.avatar,
-            },
-            isHighlighted: false,
-            isAnswered: false,
-        }
-
-        try {
-            await api.post(`rooms/${roomId}/questions`, question)
-            setNewQuestion('')
-            getRoom()
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro ao salvar a pergunta.')
-        }
-    }
-
-    async function handleLikeQuestion(questionId: string, likeId: string | undefined) {
-        try {
-            if (likeId) {
-                await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
-            } else {
-                await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
-                    author: {
-                        id: user?.id,
-                        name: user?.name,
-                        avatar: user?.avatar,
-                    }
-                })
-            }
-
-            getRoom()
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro.')
-        }
+        await sendQuestion(newQuestion)
+        setNewQuestion('')
     }
 
     return (
@@ -129,7 +91,7 @@ export function Room() {
                                         type="button"
                                         className={`like-button ${question.likeId ? 'liked' : ''}`}
                                         aria-label="Marcar como gostei"
-                                        onClick={() => handleLikeQuestion(question.id, question.likeId)}
+                                        onClick={() => likeQuestion(question.id, question.likeId)}
                                     >
                                         {question.likeCount > 0 && <span>{question.likeCount}</span>}
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

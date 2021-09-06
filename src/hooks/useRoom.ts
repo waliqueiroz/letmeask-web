@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "./useAuth"
 
 import api from "../services/api"
@@ -25,6 +25,16 @@ type Question = {
     created_at: string,
 }
 
+type Room = {
+    id: string,
+    title: string,
+    questions: Question[] | undefined,
+    author: string,
+    ended_at: string | undefined,
+    created_at: string,
+    updated_at: string,
+}
+
 type ParsedQuestion = {
     id: string,
     author: Author,
@@ -37,42 +47,87 @@ type ParsedQuestion = {
 
 export function useRoom(roomId: string) {
     const { user } = useAuth()
+    const [room, setRoom] = useState<Room>({} as Room)
     const [questions, setQuestions] = useState<ParsedQuestion[]>([])
     const [title, setTitle] = useState('')
 
-    const getRoom = useCallback(async () => {
-        try {
-            const response = await api.get(`/rooms/${roomId}`)
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await api.get(`/rooms/${roomId}`)
 
-            const { data } = response;
+                const { data } = response;
 
-            const questions: Question[] = data.questions ?? []
-
-            const parsedQuestions: ParsedQuestion[] = questions.map((question: Question) => {
-                return {
-                    id: question.id,
-                    content: question.content,
-                    author: question.author,
-                    isAnswered: question.is_answered,
-                    isHighlighted: question.is_highlighted,
-                    likeCount: question.likes ? question.likes.length : 0,
-                    likeId: question.likes ? question.likes.find((like: Like) => like.author.id === user?.id)?.id : undefined
-                }
-            })
-
-            setTitle(data.title)
-            setQuestions(parsedQuestions)
-        } catch (error) {
-            console.log(error)
-            alert("Houve um erro ao recuperar as perguntas")
-        }
-    }, [roomId, user?.id])
+                setRoom(data)
+            } catch (error) {
+                console.log(error)
+                alert("Houve um erro ao recuperar as perguntas")
+            }
+        })()
+    }, [roomId])
 
     useEffect(() => {
-        getRoom()
-    }, [getRoom])
+        const questions: Question[] = room.questions ?? []
+
+        const parsedQuestions: ParsedQuestion[] = questions.map((question: Question) => {
+            return {
+                id: question.id,
+                content: question.content,
+                author: question.author,
+                isAnswered: question.is_answered,
+                isHighlighted: question.is_highlighted,
+                likeCount: question.likes ? question.likes.length : 0,
+                likeId: question.likes ? question.likes.find((like: Like) => like.author.id === user?.id)?.id : undefined
+            }
+        });
+
+        setTitle(room.title)
+        setQuestions(parsedQuestions)
+    }, [room, user?.id])
+
+    async function sendQuestion(content: string) {
+        try {
+            const response = await api.post(`rooms/${roomId}/questions`, {
+                content: content,
+                author: {
+                    id: user?.id,
+                    name: user?.name,
+                    avatar: user?.avatar,
+                },
+                is_highlighted: false,
+                is_answered: false,
+            })
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro ao salvar a pergunta.')
+        }
+    }
+
+    async function likeQuestion(questionId: string, likeId: string | undefined) {
+        try {
+            let response;
+            if (likeId) {
+                response = await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
+            } else {
+                response = await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
+                    author: {
+                        id: user?.id,
+                        name: user?.name,
+                        avatar: user?.avatar,
+                    }
+                })
+            }
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro.')
+        }
+    }
 
     return {
-        questions, title, getRoom
+        questions, title, sendQuestion, likeQuestion
     }
 }
