@@ -33,23 +33,38 @@ export function AdminRoom() {
     } = useRoom(roomId)
 
     async function handleEndRoom() {
-        await endRoom()
-
-        history.push('/');
+        try {
+            await endRoom()
+            history.push('/');
+        } catch (error) {
+            alert("Houve um erro ao encerrar a sala.")
+        }
     }
 
     async function handleDeleteQuestion(questionId: string) {
         if (window.confirm('Tem certeza que você deseja excluir esta pergunta?')) {
-            await deleteQuestion(questionId);
+            try {
+                await deleteQuestion(questionId);
+            } catch (error) {
+                alert("Houve um erro ao deletar pergunta.")
+            }
         }
     }
 
     async function handleCheckQuestionAsAnswered(questionId: string) {
-        await markQuestionAsAnswered(questionId)
+        try {
+            await markQuestionAsAnswered(questionId)
+        } catch (error) {
+            alert("Houve um erro.")
+        }
     }
 
     async function handleHighlightQuestion(questionId: string) {
-        await await highlightQuestion(questionId)
+        try {
+            await await highlightQuestion(questionId)
+        } catch (error) {
+            alert("Houve um erro.")
+        }
     }
 
     return (

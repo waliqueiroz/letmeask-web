@@ -60,8 +60,7 @@ export function useRoom(roomId: string) {
 
                 setRoom(data)
             } catch (error) {
-                console.log(error)
-                alert("Houve um erro ao recuperar as perguntas")
+                alert("Houve um erro ao recuperar as informações da sala")
             }
         })()
     }, [roomId])
@@ -86,94 +85,63 @@ export function useRoom(roomId: string) {
     }, [room, user?.id])
 
     async function sendQuestion(content: string) {
-        try {
-            const response = await api.post(`rooms/${roomId}/questions`, {
-                content: content,
-                author: {
-                    id: user?.id,
-                    name: user?.name,
-                    avatar: user?.avatar,
-                },
-                is_highlighted: false,
-                is_answered: false,
-            })
+        const response = await api.post(`rooms/${roomId}/questions`, {
+            content: content,
+            author: {
+                id: user?.id,
+                name: user?.name,
+                avatar: user?.avatar,
+            },
+            is_highlighted: false,
+            is_answered: false,
+        })
 
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro ao salvar a pergunta.')
-        }
+        setRoom(response.data)
     }
 
     async function deleteQuestion(questionId: string) {
-        try {
-            const response = await api.delete(`rooms/${roomId}/questions/${questionId}`)
+        const response = await api.delete(`rooms/${roomId}/questions/${questionId}`)
 
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro ao salvar a pergunta.')
-        }
+        setRoom(response.data)
     }
 
     async function highlightQuestion(questionId: string) {
-        try {
-            const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
-                is_highlighted: true,
-            })
+        const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
+            is_highlighted: true,
+        })
 
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro ao salvar a pergunta.')
-        }
+        setRoom(response.data)
     }
 
     async function markQuestionAsAnswered(questionId: string) {
-        try {
-            const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
-                is_answered: true,
-            })
+        const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
+            is_answered: true,
+        })
 
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro ao salvar a pergunta.')
-        }
+        setRoom(response.data)
     }
 
 
     async function likeQuestion(questionId: string, likeId: string | undefined) {
-        try {
-            let response;
-            if (likeId) {
-                response = await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
-            } else {
-                response = await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
-                    author: {
-                        id: user?.id,
-                        name: user?.name,
-                        avatar: user?.avatar,
-                    }
-                })
-            }
-
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro.')
+        let response;
+        if (likeId) {
+            response = await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
+        } else {
+            response = await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
+                author: {
+                    id: user?.id,
+                    name: user?.name,
+                    avatar: user?.avatar,
+                }
+            })
         }
+
+        setRoom(response.data)
     }
 
     async function endRoom() {
-        try {
-            const response = await api.delete(`rooms/${roomId}`)
-
-            setRoom(response.data)
-        } catch (error) {
-            console.log(error)
-            alert('Houve um erro.')
-        }
+        const response = await api.delete(`rooms/${roomId}`)
+        setRoom(response.data)
     }
 
     return {

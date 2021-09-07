@@ -36,8 +36,20 @@ export function Room() {
             throw new Error('Você precisa fazer login para enviar uma pergunta.')
         }
 
-        await sendQuestion(newQuestion)
-        setNewQuestion('')
+        try {
+            await sendQuestion(newQuestion)
+            setNewQuestion('')
+        } catch (error) {
+            alert("Houve um erro ao enviar a pergunta.")
+        }
+    }
+
+    async function handleLikeQuestion(questionId: string, likeId: string | undefined) {
+        try {
+            await likeQuestion(questionId, likeId)
+        } catch (error) {
+            alert("Houve um erro.")
+        }
     }
 
     return (
@@ -91,7 +103,7 @@ export function Room() {
                                         type="button"
                                         className={`like-button ${question.likeId ? 'liked' : ''}`}
                                         aria-label="Marcar como gostei"
-                                        onClick={() => likeQuestion(question.id, question.likeId)}
+                                        onClick={() => handleLikeQuestion(question.id, question.likeId)}
                                     >
                                         {question.likeCount > 0 && <span>{question.likeCount}</span>}
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
