@@ -105,6 +105,44 @@ export function useRoom(roomId: string) {
         }
     }
 
+    async function deleteQuestion(questionId: string) {
+        try {
+            const response = await api.delete(`rooms/${roomId}/questions/${questionId}`)
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro ao salvar a pergunta.')
+        }
+    }
+
+    async function highlightQuestion(questionId: string) {
+        try {
+            const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
+                is_highlighted: true,
+            })
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro ao salvar a pergunta.')
+        }
+    }
+
+    async function markQuestionAsAnswered(questionId: string) {
+        try {
+            const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
+                is_answered: true,
+            })
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro ao salvar a pergunta.')
+        }
+    }
+
+
     async function likeQuestion(questionId: string, likeId: string | undefined) {
         try {
             let response;
@@ -127,7 +165,25 @@ export function useRoom(roomId: string) {
         }
     }
 
+    async function endRoom() {
+        try {
+            const response = await api.delete(`rooms/${roomId}`)
+
+            setRoom(response.data)
+        } catch (error) {
+            console.log(error)
+            alert('Houve um erro.')
+        }
+    }
+
     return {
-        questions, title, sendQuestion, likeQuestion
+        questions,
+        title,
+        sendQuestion,
+        likeQuestion,
+        deleteQuestion,
+        endRoom,
+        highlightQuestion,
+        markQuestionAsAnswered
     }
 }

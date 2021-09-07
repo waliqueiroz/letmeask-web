@@ -10,7 +10,6 @@ import { Question } from '../../components/Question';
 import { RoomCode } from '../../components/RoomCode';
 // import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../../hooks/useRoom';
-import { database } from '../../services/firebase';
 
 import '../../styles/room.scss';
 
@@ -24,32 +23,33 @@ export function AdminRoom() {
     const params = useParams<RoomParams>();
     const roomId = params.id;
 
-    const { title, questions } = useRoom(roomId)
+    const {
+        title,
+        questions,
+        endRoom,
+        deleteQuestion,
+        highlightQuestion,
+        markQuestionAsAnswered
+    } = useRoom(roomId)
 
     async function handleEndRoom() {
-        await database.ref(`rooms/${roomId}`).update({
-            endedAt: new Date(),
-        })
+        await endRoom()
 
         history.push('/');
     }
 
     async function handleDeleteQuestion(questionId: string) {
         if (window.confirm('Tem certeza que você deseja excluir esta pergunta?')) {
-            await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
+            await deleteQuestion(questionId);
         }
     }
 
     async function handleCheckQuestionAsAnswered(questionId: string) {
-        await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-            isAnswered: true,
-        })
+        await markQuestionAsAnswered(questionId)
     }
 
     async function handleHighlightQuestion(questionId: string) {
-        await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-            isHighlighted: true,
-        })
+        await await highlightQuestion(questionId)
     }
 
     return (
