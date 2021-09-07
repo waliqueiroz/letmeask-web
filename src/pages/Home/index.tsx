@@ -6,9 +6,9 @@ import logoImg from '../../assets/images/logo.svg'
 
 import { FormEvent } from 'react'
 import { useState } from 'react'
-import { database } from '../../services/firebase'
 
 import '../../styles/auth.scss'
+import api from '../../services/api'
 
 export function Home() {
     const history = useHistory()
@@ -22,20 +22,21 @@ export function Home() {
             return
         }
 
-        const roomRef = await database.ref(`rooms/${roomCode}`).get()
+        try {
+            const response = await api.get(`/rooms/${roomCode}`)
 
-        if (!roomRef.exists()) {
-            alert('Room does not exists.')
-            return
+            const { data } = response;
+
+            if (data.ended_at) {
+                alert('Esta sala já foi encerrada.')
+                return
+            }
+
+            history.push(`/rooms/${roomCode}`)
+        } catch (error) {
+            console.log(error)
+            alert("Sala não existe.")
         }
-
-        if (roomRef.val().endedAt) {
-            alert('Room already closed.')
-            return
-        }
-
-        history.push(`/rooms/${roomCode}`)
-
     }
 
     return (
