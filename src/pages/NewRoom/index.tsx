@@ -1,68 +1,73 @@
-import { Button } from '../../components/Button'
-import illustrationImg from '../../assets/images/illustration.svg'
-import logoImg from '../../assets/images/logo.svg'
+import { FormEvent, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import '../../styles/auth.scss'
-import { Link, useHistory } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
-import { FormEvent, useState } from 'react'
-import api from '../../services/api'
+import { useAuth } from '../../hooks/useAuth';
+import { Button } from '../../components/Button';
+import api from '../../services/api';
 
-export function NewRoom() {
-    const { user } = useAuth()
-    const history = useHistory()
+import illustrationImg from '../../assets/images/illustration.svg';
+import logoImg from '../../assets/images/logo.svg';
 
-    const [newRoom, setNewRoom] = useState('')
+import '../../styles/auth.scss';
 
-    async function handleCreateRoom(event: FormEvent) {
-        event.preventDefault()
+export const NewRoom: React.FC = () => {
+  const { user } = useAuth();
+  const history = useHistory();
 
-        if (newRoom.trim() === '') {
-            return
-        }
+  const [newRoom, setNewRoom] = useState('');
 
-        try {
-            const response = await api.post('/rooms', {
-                title: newRoom,
-                author: {
-                    id: user?.id,
-                    name: user?.name,
-                    avatar: user?.avatar
-                }
-            })
+  async function handleCreateRoom(event: FormEvent) {
+    event.preventDefault();
 
-            history.push(`/rooms/${response.data.id}`)
-        } catch (error) {
-            alert("Houve um erro ao criar a sala.")
-        }
+    if (newRoom.trim() === '') {
+      return;
     }
 
-    return (
-        <div id="page-auth">
-            <aside>
-                <img src={illustrationImg} alt="Ilustração simbolizando perguntas e respostas" />
-                <strong>Crie salas de Q&amp;A ao-vivo</strong>
-                <p>Tire as dúvidas da sua audiência em tempo-real</p>
-            </aside>
-            <main>
-                <div className="main-content">
-                    <img src={logoImg} alt="Letmeask" />
-                    <h1>{user?.name}</h1>
-                    <h2>Criar uma nova sala</h2>
-                    <form onSubmit={handleCreateRoom}>
-                        <input
-                            type="text"
-                            placeholder="Nome da sala"
-                            value={newRoom}
-                            onChange={(event) => setNewRoom(event.target.value)}
-                        />
-                        <Button type="submit">
-                            Criar sala
-                        </Button>
-                    </form>
-                    <p>Quer entrar em uma sala existente? <Link to="/">clique aqui</Link></p>
-                </div>
-            </main>
+    try {
+      const response = await api.post('/rooms', {
+        title: newRoom,
+        author: {
+          id: user?.id,
+          name: user?.name,
+          avatar: user?.avatar,
+        },
+      });
+
+      history.push(`/rooms/${response.data.id}`);
+    } catch (error) {
+      alert('Houve um erro ao criar a sala.');
+    }
+  }
+
+  return (
+    <div id="page-auth">
+      <aside>
+        <img src={illustrationImg} alt="Ilustração simbolizando perguntas e respostas" />
+        <strong>Crie salas de Q&amp;A ao-vivo</strong>
+        <p>Tire as dúvidas da sua audiência em tempo-real</p>
+      </aside>
+      <main>
+        <div className="main-content">
+          <img src={logoImg} alt="Letmeask" />
+          <h1>{user?.name}</h1>
+          <h2>Criar uma nova sala</h2>
+          <form onSubmit={handleCreateRoom}>
+            <input
+              type="text"
+              placeholder="Nome da sala"
+              value={newRoom}
+              onChange={(event) => setNewRoom(event.target.value)}
+            />
+            <Button type="submit">
+              Criar sala
+            </Button>
+          </form>
+          <p>
+            Quer entrar em uma sala existente?
+            <Link to="/">clique aqui</Link>
+          </p>
         </div>
-    )
-}
+      </main>
+    </div>
+  );
+};

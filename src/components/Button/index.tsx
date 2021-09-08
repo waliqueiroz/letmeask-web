@@ -1,16 +1,16 @@
-import { ButtonHTMLAttributes } from 'react'
+/* eslint-disable react/jsx-props-no-spreading */
+import { ButtonHTMLAttributes } from 'react';
 
 import './styles.scss';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-    isOutlined?: boolean
+  isOutlined?: boolean
 };
 
-export function Button({ isOutlined = false, ...props }: ButtonProps) {
-    return (
-        <button
-            className={`button ${isOutlined ? 'outlined' : ''}`}
-            {...props}
-        />
-    )
-}
+export const Button: React.FC<ButtonProps> = ({ isOutlined = false, ...props }) => (
+  <button
+    type="button"
+    className={`button ${isOutlined ? 'outlined' : ''}`}
+    {...props}
+  />
+);
