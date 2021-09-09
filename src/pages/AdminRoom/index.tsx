@@ -62,7 +62,7 @@ export const AdminRoom: React.FC = () => {
 
   async function handleHighlightQuestion(questionId: string) {
     try {
-      await await highlightQuestion(questionId);
+      await highlightQuestion(questionId);
     } catch (error) {
       toast.error('Houve um erro.');
     }
