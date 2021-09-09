@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import api from '../../services/api';
@@ -27,14 +28,13 @@ export const Home: React.FC = () => {
       const { data } = response;
 
       if (data.ended_at) {
-        alert('Esta sala já foi encerrada.');
+        toast.error('Esta sala já foi encerrada.');
         return;
       }
 
       history.push(`/rooms/${roomCode}`);
     } catch (error) {
-      console.log(error);
-      alert('Sala não existe.');
+      toast.error('Sala não existe.');
     }
   }
 

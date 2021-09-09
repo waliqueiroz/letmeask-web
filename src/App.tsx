@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import { ToastContainer } from 'react-toastify';
 import { AuthContextProvider } from './contexts/AuthContext';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Home } from './pages/Home';
 import { NewRoom } from './pages/NewRoom';
@@ -18,6 +21,7 @@ const App: React.FC = () => (
         <Route path="/rooms/:id" component={Room} />
         <Route path="/admin/rooms/:id" component={AdminRoom} />
       </Switch>
+      <ToastContainer autoClose={3000} />
     </BrowserRouter>
   </AuthContextProvider>
 );

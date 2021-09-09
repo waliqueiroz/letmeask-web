@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import { useAuth } from '../../hooks/useAuth';
@@ -24,7 +25,7 @@ export const Login: React.FC = () => {
 
       history.push('/rooms/new');
     } catch (error) {
-      alert('Credenciais inválidas, verifique seus dados e tente novamente.');
+      toast.warn('Credenciais inválidas, verifique seus dados e tente novamente.');
     }
   }
 

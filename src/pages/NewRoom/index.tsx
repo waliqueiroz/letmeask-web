@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../../components/Button';
@@ -35,7 +36,7 @@ export const NewRoom: React.FC = () => {
 
       history.push(`/rooms/${response.data.id}`);
     } catch (error) {
-      alert('Houve um erro ao criar a sala.');
+      toast.error('Houve um erro ao criar a sala.');
     }
   }
 

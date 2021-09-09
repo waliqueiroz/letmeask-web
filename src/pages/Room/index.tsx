@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
 import { useRoom } from '../../hooks/useRoom';
@@ -42,7 +43,7 @@ export const Room: React.FC = () => {
       await sendQuestion(newQuestion);
       setNewQuestion('');
     } catch (error) {
-      alert('Houve um erro ao enviar a pergunta.');
+      toast.error('Houve um erro ao enviar a pergunta.');
     }
   }
 
@@ -50,7 +51,7 @@ export const Room: React.FC = () => {
     try {
       await likeQuestion(questionId, likeId);
     } catch (error) {
-      alert('Houve um erro.');
+      toast.error('Houve um erro.');
     }
   }
 

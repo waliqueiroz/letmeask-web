@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import { useEffect, useState } from 'react';
-import { useAuth } from './useAuth';
+import { toast } from 'react-toastify';
 
+import { useAuth } from './useAuth';
 import api from '../services/api';
 
 type Author = {
@@ -72,7 +73,7 @@ export function useRoom(roomId: string): useRoomData {
 
         setRoom(data);
       } catch (error) {
-        alert('Houve um erro ao recuperar as informações da sala');
+        toast.error('Houve um erro ao recuperar as informações da sala');
       }
     })();
   }, [roomId]);

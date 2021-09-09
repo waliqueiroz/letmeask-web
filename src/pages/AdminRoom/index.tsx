@@ -1,4 +1,5 @@
 import { useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import logoImg from '../../assets/images/logo.svg';
 import deleteImg from '../../assets/images/delete.svg';
@@ -37,7 +38,7 @@ export const AdminRoom: React.FC = () => {
       await endRoom();
       history.push('/');
     } catch (error) {
-      alert('Houve um erro ao encerrar a sala.');
+      toast.error('Houve um erro ao encerrar a sala.');
     }
   }
 
@@ -46,7 +47,7 @@ export const AdminRoom: React.FC = () => {
       try {
         await deleteQuestion(questionId);
       } catch (error) {
-        alert('Houve um erro ao deletar pergunta.');
+        toast.error('Houve um erro ao deletar pergunta.');
       }
     }
   }
@@ -55,7 +56,7 @@ export const AdminRoom: React.FC = () => {
     try {
       await markQuestionAsAnswered(questionId);
     } catch (error) {
-      alert('Houve um erro.');
+      toast.error('Houve um erro.');
     }
   }
 
@@ -63,7 +64,7 @@ export const AdminRoom: React.FC = () => {
     try {
       await await highlightQuestion(questionId);
     } catch (error) {
-      alert('Houve um erro.');
+      toast.error('Houve um erro.');
     }
   }
 
