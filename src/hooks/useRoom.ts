@@ -50,12 +50,15 @@ type ParsedQuestion = {
 type useRoomData = {
   questions: ParsedQuestion[];
   title: string;
-  sendQuestion: (content: string) => void;
-  likeQuestion: (questionId: string, likeId: string | undefined) => void;
-  deleteQuestion: (questionId: string) => void;
-  endRoom: () => void;
-  highlightQuestion: (questionId: string) => void;
-  markQuestionAsAnswered: (questionId: string) => void;
+  sendQuestion: (content: string) => Promise<void>;
+  likeQuestion: (
+    questionId: string,
+    likeId: string | undefined,
+  ) => Promise<void>;
+  deleteQuestion: (questionId: string) => Promise<void>;
+  endRoom: () => Promise<void>;
+  highlightQuestion: (questionId: string) => Promise<void>;
+  markQuestionAsAnswered: (questionId: string) => Promise<void>;
 };
 
 export function useRoom(roomId: string): useRoomData {
