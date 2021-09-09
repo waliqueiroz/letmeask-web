@@ -4,7 +4,7 @@ import './styles.scss';
 
 type RoomCodeProps = {
   code: string;
-}
+};
 
 export const RoomCode: React.FC<RoomCodeProps> = ({ code }) => {
   function copyRoomCodeToClipboard() {
@@ -12,14 +12,15 @@ export const RoomCode: React.FC<RoomCodeProps> = ({ code }) => {
   }
 
   return (
-    <button type="button" onClick={copyRoomCodeToClipboard} className="room-code">
+    <button
+      type="button"
+      onClick={copyRoomCodeToClipboard}
+      className="room-code"
+    >
       <div>
         <img src={copyImg} alt="Copy room code" />
       </div>
-      <span>
-        Sala #
-        {code}
-      </span>
+      <span>Sala #{code}</span>
     </button>
   );
 };

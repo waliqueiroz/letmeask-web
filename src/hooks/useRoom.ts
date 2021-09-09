@@ -6,57 +6,57 @@ import { useAuth } from './useAuth';
 import api from '../services/api';
 
 type Author = {
-  id: string,
-  name: string,
-  avatar: string
-}
+  id: string;
+  name: string;
+  avatar: string;
+};
 
 type Like = {
-  id: string,
-  author: Author,
-  created_at: string,
-}
+  id: string;
+  author: Author;
+  created_at: string;
+};
 
 type Question = {
-  id: string,
-  content: string,
-  is_highlighted: boolean,
-  is_answered: boolean,
-  author: Author,
-  likes: Like[],
-  created_at: string,
-}
+  id: string;
+  content: string;
+  is_highlighted: boolean;
+  is_answered: boolean;
+  author: Author;
+  likes: Like[];
+  created_at: string;
+};
 
 type Room = {
-  id: string,
-  title: string,
-  questions: Question[] | undefined,
-  author: string,
-  ended_at: string | undefined,
-  created_at: string,
-  updated_at: string,
-}
+  id: string;
+  title: string;
+  questions: Question[] | undefined;
+  author: string;
+  ended_at: string | undefined;
+  created_at: string;
+  updated_at: string;
+};
 
 type ParsedQuestion = {
-  id: string,
-  author: Author,
-  content: string,
-  isAnswered: boolean,
-  isHighlighted: boolean,
-  likeCount: number,
-  likeId: string | undefined,
-}
+  id: string;
+  author: Author;
+  content: string;
+  isAnswered: boolean;
+  isHighlighted: boolean;
+  likeCount: number;
+  likeId: string | undefined;
+};
 
 type useRoomData = {
-  questions: ParsedQuestion[],
-  title: string,
-  sendQuestion: (content: string) => void,
-  likeQuestion: (questionId: string, likeId: string | undefined) => void,
-  deleteQuestion: (questionId: string) => void,
-  endRoom: () => void,
-  highlightQuestion: (questionId: string) => void,
-  markQuestionAsAnswered: (questionId: string) => void,
-}
+  questions: ParsedQuestion[];
+  title: string;
+  sendQuestion: (content: string) => void;
+  likeQuestion: (questionId: string, likeId: string | undefined) => void;
+  deleteQuestion: (questionId: string) => void;
+  endRoom: () => void;
+  highlightQuestion: (questionId: string) => void;
+  markQuestionAsAnswered: (questionId: string) => void;
+};
 
 export function useRoom(roomId: string): useRoomData {
   const { user } = useAuth();
@@ -81,17 +81,19 @@ export function useRoom(roomId: string): useRoomData {
   useEffect(() => {
     const roomQuestions: Question[] = room.questions ?? [];
 
-    const parsedQuestions: ParsedQuestion[] = roomQuestions.map((question: Question) => ({
-      id: question.id,
-      content: question.content,
-      author: question.author,
-      isAnswered: question.is_answered,
-      isHighlighted: question.is_highlighted,
-      likeCount: question.likes ? question.likes.length : 0,
-      likeId: question.likes
-        ? question.likes.find((like: Like) => like.author.id === user?.id)?.id
-        : undefined,
-    }));
+    const parsedQuestions: ParsedQuestion[] = roomQuestions.map(
+      (question: Question) => ({
+        id: question.id,
+        content: question.content,
+        author: question.author,
+        isAnswered: question.is_answered,
+        isHighlighted: question.is_highlighted,
+        likeCount: question.likes ? question.likes.length : 0,
+        likeId: question.likes
+          ? question.likes.find((like: Like) => like.author.id === user?.id)?.id
+          : undefined,
+      }),
+    );
 
     setTitle(room.title);
     setQuestions(parsedQuestions);
@@ -113,23 +115,31 @@ export function useRoom(roomId: string): useRoomData {
   }
 
   async function deleteQuestion(questionId: string) {
-    const response = await api.delete(`rooms/${roomId}/questions/${questionId}`);
+    const response = await api.delete(
+      `rooms/${roomId}/questions/${questionId}`,
+    );
 
     setRoom(response.data);
   }
 
   async function highlightQuestion(questionId: string) {
-    const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
-      is_highlighted: true,
-    });
+    const response = await api.patch(
+      `rooms/${roomId}/questions/${questionId}`,
+      {
+        is_highlighted: true,
+      },
+    );
 
     setRoom(response.data);
   }
 
   async function markQuestionAsAnswered(questionId: string) {
-    const response = await api.patch(`rooms/${roomId}/questions/${questionId}`, {
-      is_answered: true,
-    });
+    const response = await api.patch(
+      `rooms/${roomId}/questions/${questionId}`,
+      {
+        is_answered: true,
+      },
+    );
 
     setRoom(response.data);
   }
@@ -137,15 +147,20 @@ export function useRoom(roomId: string): useRoomData {
   async function likeQuestion(questionId: string, likeId: string | undefined) {
     let response;
     if (likeId) {
-      response = await api.delete(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`);
+      response = await api.delete(
+        `rooms/${roomId}/questions/${questionId}/likes/${likeId}`,
+      );
     } else {
-      response = await api.post(`rooms/${roomId}/questions/${questionId}/likes`, {
-        author: {
-          id: user?.id,
-          name: user?.name,
-          avatar: user?.avatar,
+      response = await api.post(
+        `rooms/${roomId}/questions/${questionId}/likes`,
+        {
+          author: {
+            id: user?.id,
+            name: user?.name,
+            avatar: user?.avatar,
+          },
         },
-      });
+      );
     }
 
     setRoom(response.data);

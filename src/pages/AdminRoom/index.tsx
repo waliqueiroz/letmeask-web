@@ -1,6 +1,6 @@
 import { useHistory, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
+import { toast } from 'react-toastify';
 import logoImg from '../../assets/images/logo.svg';
 import deleteImg from '../../assets/images/delete.svg';
 import checkImg from '../../assets/images/check.svg';
@@ -16,7 +16,7 @@ import '../../styles/room.scss';
 
 type RoomParams = {
   id: string;
-}
+};
 
 export const AdminRoom: React.FC = () => {
   // const { user } = useAuth();
@@ -75,7 +75,9 @@ export const AdminRoom: React.FC = () => {
           <img src={logoImg} alt="Letmeask" />
           <div>
             <RoomCode code={roomId} />
-            <Button isOutlined onClick={handleEndRoom}>Encerrar sala</Button>
+            <Button isOutlined onClick={handleEndRoom}>
+              Encerrar sala
+            </Button>
           </div>
         </div>
       </header>
@@ -86,13 +88,7 @@ export const AdminRoom: React.FC = () => {
             Sala
             {title}
           </h1>
-          {questions.length > 0 && (
-            <span>
-              {questions.length}
-              {' '}
-              pergunta(s)
-            </span>
-          )}
+          {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
 
         <div className="question-list">

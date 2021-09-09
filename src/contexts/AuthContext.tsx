@@ -1,35 +1,35 @@
 /* eslint-disable camelcase */
-import {
-  createContext, ReactNode, useEffect, useState,
-} from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import api from '../services/api';
 
 type AuthContextProviderProps = {
   children: ReactNode;
-}
+};
 
 type User = {
-  id: string
-  name: string
-  avatar: string
-  email: string
-  created_at: string
-  updated_at: string
-}
+  id: string;
+  name: string;
+  avatar: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+};
 
 export type AuthContextData = {
   user: User | undefined;
-  token: string,
-  signed: boolean,
-  signIn: (email: string, password: string) => Promise<void>
-  signOut: () => void
-}
+  token: string;
+  signed: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => void;
+};
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
+export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
+  children,
+}) => {
   const history = useHistory();
 
   const TOKEN_KEY = '@letmeask-token';
@@ -79,13 +79,14 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
   }
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      signIn,
-      signed,
-      token,
-      signOut,
-    }}
+    <AuthContext.Provider
+      value={{
+        user,
+        signIn,
+        signed,
+        token,
+        signOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

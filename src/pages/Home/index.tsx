@@ -41,7 +41,10 @@ export const Home: React.FC = () => {
   return (
     <div id="page-auth">
       <aside>
-        <img src={illustrationImg} alt="Ilustração simbolizando perguntas e respostas" />
+        <img
+          src={illustrationImg}
+          alt="Ilustração simbolizando perguntas e respostas"
+        />
         <strong>Crie salas de Q&amp;A ao-vivo</strong>
         <p>Tire as dúvidas da sua audiência em tempo-real</p>
       </aside>
@@ -57,11 +60,11 @@ export const Home: React.FC = () => {
               type="text"
               placeholder="Digite o código da sala"
               value={roomCode}
-              onChange={(event) => { setRoomCode(event.target.value); }}
+              onChange={(event) => {
+                setRoomCode(event.target.value);
+              }}
             />
-            <Button type="submit">
-              Entrar na sala
-            </Button>
+            <Button type="submit">Entrar na sala</Button>
           </form>
         </div>
       </main>

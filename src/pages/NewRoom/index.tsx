@@ -43,7 +43,10 @@ export const NewRoom: React.FC = () => {
   return (
     <div id="page-auth">
       <aside>
-        <img src={illustrationImg} alt="Ilustração simbolizando perguntas e respostas" />
+        <img
+          src={illustrationImg}
+          alt="Ilustração simbolizando perguntas e respostas"
+        />
         <strong>Crie salas de Q&amp;A ao-vivo</strong>
         <p>Tire as dúvidas da sua audiência em tempo-real</p>
       </aside>
@@ -59,9 +62,7 @@ export const NewRoom: React.FC = () => {
               value={newRoom}
               onChange={(event) => setNewRoom(event.target.value)}
             />
-            <Button type="submit">
-              Criar sala
-            </Button>
+            <Button type="submit">Criar sala</Button>
           </form>
           <p>
             Quer entrar em uma sala existente?

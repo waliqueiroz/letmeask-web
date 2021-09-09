@@ -12,7 +12,7 @@ type QuestionProps = {
   children?: ReactNode;
   isAnswered?: boolean;
   isHighlighted?: boolean;
-}
+};
 
 export const Question: React.FC<QuestionProps> = ({
   content,
@@ -34,9 +34,7 @@ export const Question: React.FC<QuestionProps> = ({
         <img src={author.avatar} alt={author.name} />
         <span>{author.name}</span>
       </div>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </footer>
   </div>
 );
