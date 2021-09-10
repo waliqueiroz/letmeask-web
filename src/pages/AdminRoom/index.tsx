@@ -1,6 +1,8 @@
 import { useHistory, useParams } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+
 import logoImg from '../../assets/images/logo.svg';
 import deleteImg from '../../assets/images/delete.svg';
 import checkImg from '../../assets/images/check.svg';
@@ -33,23 +35,43 @@ export const AdminRoom: React.FC = () => {
     markQuestionAsAnswered,
   } = useRoom(roomId);
 
-  async function handleEndRoom() {
-    try {
-      await endRoom();
-      history.push('/');
-    } catch (error) {
-      toast.error('Houve um erro ao encerrar a sala.');
-    }
+  function handleEndRoom() {
+    Swal.fire({
+      title: 'Encerrar esta sala?',
+      showCancelButton: true,
+      confirmButtonText: 'Encerrar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: '#835AFD',
+      confirmButtonColor: '#E559F9',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await endRoom();
+          history.push('/');
+        } catch (error) {
+          toast.error('Houve um erro ao encerrar a sala.');
+        }
+      }
+    });
   }
 
-  async function handleDeleteQuestion(questionId: string) {
-    if (window.confirm('Tem certeza que você deseja excluir esta pergunta?')) {
-      try {
-        await deleteQuestion(questionId);
-      } catch (error) {
-        toast.error('Houve um erro ao deletar pergunta.');
+  function handleDeleteQuestion(questionId: string) {
+    Swal.fire({
+      title: 'Excluir esta pergunta?',
+      showCancelButton: true,
+      confirmButtonText: 'Excluir',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: '#835AFD',
+      confirmButtonColor: '#E559F9',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteQuestion(questionId);
+        } catch (error) {
+          toast.error('Houve um erro ao deletar pergunta.');
+        }
       }
-    }
+    });
   }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
@@ -75,7 +97,7 @@ export const AdminRoom: React.FC = () => {
           <img src={logoImg} alt="Letmeask" />
           <div>
             <RoomCode code={roomId} />
-            <Button isOutlined onClick={handleEndRoom}>
+            <Button isOutlined onClick={() => handleEndRoom()}>
               Encerrar sala
             </Button>
           </div>
@@ -84,10 +106,7 @@ export const AdminRoom: React.FC = () => {
 
       <main>
         <div className="room-title">
-          <h1>
-            Sala
-            {title}
-          </h1>
+          <h1>Sala {title}</h1>
           {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
 
