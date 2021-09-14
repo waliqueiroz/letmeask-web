@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import api from '../../services/api';
+import { getRoom } from '../../services/room';
 
 import illustrationImg from '../../assets/images/illustration.svg';
 import logoImg from '../../assets/images/logo.svg';
@@ -23,11 +23,9 @@ export const Home: React.FC = () => {
     }
 
     try {
-      const response = await api.get(`/rooms/${roomCode}`);
+      const room = await getRoom(roomCode);
 
-      const { data } = response;
-
-      if (data.ended_at) {
+      if (room.endedAt) {
         toast.error('Esta sala já foi encerrada.');
         return;
       }

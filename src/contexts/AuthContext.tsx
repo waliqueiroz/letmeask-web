@@ -1,20 +1,27 @@
-/* eslint-disable camelcase */
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import api from '../services/api';
+import { setAuthorizationHeader } from '../services/api';
+import { login } from '../services/auth';
 
 type AuthContextProviderProps = {
   children: ReactNode;
 };
 
-type User = {
+export type User = {
   id: string;
   name: string;
   avatar: string;
   email: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AuthData = {
+  user: User;
+  accessToken: string;
+  tokenType: string;
+  expiresIn: string;
 };
 
 export type AuthContextData = {
@@ -44,7 +51,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
     setToken(currentToken);
     setSigned(authUser !== undefined);
 
-    api.defaults.headers.Authorization = `Bearer ${currentToken}`;
+    setAuthorizationHeader(currentToken);
   }
 
   useEffect(() => {
@@ -58,16 +65,13 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   }, []);
 
   async function signIn(email: string, password: string) {
-    const response = await api.post('login', {
-      email,
-      password,
-    });
+    const data = await login(email, password);
 
-    const { user: authUser, access_token: AccessToken } = response.data;
+    const { user: authUser, accessToken } = data;
 
-    setAuthState(authUser, AccessToken);
+    setAuthState(authUser, accessToken);
 
-    window.localStorage.setItem(TOKEN_KEY, AccessToken);
+    window.localStorage.setItem(TOKEN_KEY, accessToken);
     window.localStorage.setItem(USER_KEY, JSON.stringify(authUser));
   }
 
