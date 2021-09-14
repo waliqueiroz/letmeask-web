@@ -1,3 +1,5 @@
+import { objectToCamel, objectToSnake } from 'ts-case-convert/lib/caseConvert';
+
 import api from './api';
 
 import { Author, Question, Room } from '../hooks/useRoom';
@@ -5,16 +7,19 @@ import { Author, Question, Room } from '../hooks/useRoom';
 export async function getRoom(roomId: string): Promise<Room> {
   const { data } = await api.get(`/rooms/${roomId}`);
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function sendQuestion(
   roomId: string,
   question: Question,
 ): Promise<Room> {
-  const { data } = await api.post(`rooms/${roomId}/questions`, question);
+  const { data } = await api.post(
+    `rooms/${roomId}/questions`,
+    objectToSnake(question),
+  );
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function deleteQuestion(
@@ -23,7 +28,7 @@ export async function deleteQuestion(
 ): Promise<Room> {
   const { data } = await api.delete(`rooms/${roomId}/questions/${questionId}`);
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function highlightQuestion(
@@ -34,7 +39,7 @@ export async function highlightQuestion(
     is_highlighted: true,
   });
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function markQuestionAsAnswered(
@@ -45,7 +50,7 @@ export async function markQuestionAsAnswered(
     is_answered: true,
   });
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function likeQuestion(
@@ -60,7 +65,7 @@ export async function likeQuestion(
     },
   );
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function deslikeQuestion(
@@ -72,10 +77,10 @@ export async function deslikeQuestion(
     `rooms/${roomId}/questions/${questionId}/likes/${likeId}`,
   );
 
-  return data;
+  return objectToCamel<Room>(data);
 }
 
 export async function endRoom(roomId: string): Promise<Room> {
   const { data } = await api.delete(`rooms/${roomId}`);
-  return data;
+  return objectToCamel<Room>(data);
 }

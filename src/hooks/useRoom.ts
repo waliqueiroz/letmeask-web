@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -24,17 +23,17 @@ export type Author = {
 export type Like = {
   id: string;
   author: Author;
-  created_at: string;
+  createdAt: string;
 };
 
 export type Question = {
   id?: string;
   content: string;
-  is_highlighted: boolean;
-  is_answered: boolean;
+  isHighlighted: boolean;
+  isAnswered: boolean;
   author: Author;
   likes?: Like[];
-  created_at?: string;
+  createdAt?: string;
 };
 
 export type Room = {
@@ -42,9 +41,9 @@ export type Room = {
   title: string;
   questions?: Question[];
   author: string;
-  ended_at?: string;
-  created_at: string;
-  updated_at: string;
+  endedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ParsedQuestion = {
@@ -97,8 +96,8 @@ export function useRoom(roomId: string): useRoomData {
         id: question.id as string,
         content: question.content,
         author: question.author,
-        isAnswered: question.is_answered,
-        isHighlighted: question.is_highlighted,
+        isAnswered: question.isAnswered,
+        isHighlighted: question.isHighlighted,
         likeCount: question.likes ? question.likes.length : 0,
         likeId: question.likes
           ? question.likes.find((like: Like) => like.author.id === user?.id)?.id
@@ -118,8 +117,8 @@ export function useRoom(roomId: string): useRoomData {
         name: user?.name as string,
         avatar: user?.avatar as string,
       },
-      is_highlighted: false,
-      is_answered: false,
+      isHighlighted: false,
+      isAnswered: false,
     };
 
     const data = await apiSendQuestion(roomId, question);
