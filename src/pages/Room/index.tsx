@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -86,8 +86,8 @@ export const Room: React.FC = () => {
               </div>
             ) : (
               <span>
-                Para enviar uma pergunta,
-                <button type="button">faça seu login</button>.
+                Para enviar uma pergunta,{' '}
+                <Link to="/login">faça seu login</Link>.
               </span>
             )}
 

@@ -65,8 +65,7 @@ export const NewRoom: React.FC = () => {
             <Button type="submit">Criar sala</Button>
           </form>
           <p>
-            Quer entrar em uma sala existente?
-            <Link to="/">clique aqui</Link>
+            Quer entrar em uma sala existente? <Link to="/">Clique aqui</Link>
           </p>
         </div>
       </main>
