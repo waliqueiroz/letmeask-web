@@ -28,6 +28,7 @@ export type AuthContextData = {
   user: User | undefined;
   token: string;
   signed: boolean;
+  loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
 };
@@ -44,6 +45,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 
   const [user, setUser] = useState<User>();
   const [signed, setSigned] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState('');
 
   function setAuthState(authUser: User | undefined, currentToken: string) {
@@ -62,6 +64,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
       const authUser = JSON.parse(userSerialized);
       setAuthState(authUser, currentToken);
     }
+
+    setLoading(false);
   }, []);
 
   async function signIn(email: string, password: string) {
@@ -88,6 +92,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
         user,
         signIn,
         signed,
+        loading,
         token,
         signOut,
       }}
