@@ -11,9 +11,9 @@ import { Login } from '../pages/Login';
 const Routes: React.FC = () => {
   return (
     <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/rooms/new" component={NewRoom} />
+      <Route useAuthLayout path="/" exact component={Home} />
+      <Route useAuthLayout path="/login" component={Login} />
+      <Route useAuthLayout path="/rooms/new" component={NewRoom} />
       <Route path="/rooms/:id" component={Room} />
       <Route isPrivate path="/admin/rooms/:id" component={AdminRoom} />
     </Switch>

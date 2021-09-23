@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { ElementType } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { AuthLayout } from '../components/AuthLayout';
 
 import { Loader } from '../components/Loader';
 import { useAuth } from '../hooks/useAuth';
@@ -30,16 +31,16 @@ const RouterWrapper: React.FC<RouterWrapperProps> = ({
   }
 
   if (useAuthLayout) {
-    // return (
-    //   <Route
-    //     {...rest}
-    //     render={(props) => (
-    //       <Template description={description}>
-    //         <Component {...props} />
-    //       </Template>
-    //     )}
-    //   />
-    // );
+    return (
+      <Route
+        {...rest}
+        render={(props) => (
+          <AuthLayout>
+            <Component {...props} />
+          </AuthLayout>
+        )}
+      />
+    );
   }
 
   return <Route {...rest} render={(props) => <Component {...props} />} />;

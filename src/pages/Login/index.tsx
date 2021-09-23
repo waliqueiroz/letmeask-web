@@ -1,15 +1,11 @@
 import { useState, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import { useAuth } from '../../hooks/useAuth';
 
-import illustrationImg from '../../assets/images/illustration.svg';
 import logoImg from '../../assets/images/logo.svg';
-
-import '../../styles/auth.scss';
-import './styles.scss';
 
 export const Login: React.FC = () => {
   const history = useHistory();
@@ -32,39 +28,31 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div id="page-auth">
-      <aside>
-        <img
-          src={illustrationImg}
-          alt="Ilustração simbolizando perguntas e respostas"
+    <div className="main-content">
+      <img className="logo-img" src={logoImg} alt="Letmeask" />
+      <br />
+      <form className="main-form" onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Digite seu email"
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
+          }}
         />
-        <strong>Crie salas de Q&amp;A ao-vivo</strong>
-        <p>Tire as dúvidas da sua audiência em tempo-real</p>
-      </aside>
-      <main>
-        <div className="main-content">
-          <img src={logoImg} alt="Letmeask" />
-          <form id="form-login" onSubmit={handleLogin}>
-            <input
-              type="text"
-              placeholder="Digite seu email"
-              value={email}
-              onChange={(event) => {
-                setEmail(event.target.value);
-              }}
-            />
-            <input
-              type="password"
-              placeholder="Digite sua senha"
-              value={password}
-              onChange={(event) => {
-                setPassword(event.target.value);
-              }}
-            />
-            <Button type="submit">Entrar</Button>
-          </form>
-        </div>
-      </main>
+        <input
+          type="password"
+          placeholder="Digite sua senha"
+          value={password}
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
+        />
+        <Button type="submit">Entrar</Button>
+      </form>
+      <p className="main-footer">
+        Quer entrar em uma sala existente? <Link to="/">Clique aqui</Link>
+      </p>
     </div>
   );
 };
