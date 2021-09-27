@@ -10,6 +10,18 @@ export async function getRoom(roomId: string): Promise<Room> {
   return objectToCamel<Room>(data);
 }
 
+export async function createRoom(title: string, author: Author): Promise<Room> {
+  const { data } = await api.post(
+    '/rooms',
+    objectToSnake({
+      title,
+      author,
+    }),
+  );
+
+  return objectToCamel<Room>(data);
+}
+
 export async function sendQuestion(
   roomId: string,
   question: Question,

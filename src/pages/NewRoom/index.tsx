@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../../components/Button';
-import api from '../../services/api';
+import { createRoom } from '../../services/room';
 
 import logoImg from '../../assets/images/logo.svg';
 
@@ -22,16 +22,13 @@ export const NewRoom: React.FC = () => {
     }
 
     try {
-      const response = await api.post('/rooms', {
-        title: newRoom,
-        author: {
-          id: user?.id,
-          name: user?.name,
-          avatar: user?.avatar,
-        },
+      const data = await createRoom(newRoom, {
+        id: user?.id as string,
+        name: user?.name as string,
+        avatar: user?.avatar as string,
       });
 
-      history.push(`/rooms/${response.data.id}`);
+      history.push(`/rooms/${data.id}`);
     } catch (error) {
       toast.error('Houve um erro ao criar a sala.');
     }

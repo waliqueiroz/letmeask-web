@@ -51,7 +51,8 @@ export const Login: React.FC = () => {
         <Button type="submit">Entrar</Button>
       </form>
       <p className="main-footer">
-        Quer entrar em uma sala existente? <Link to="/">Clique aqui</Link>
+        Quer entrar em uma sala existente? <Link to="/">Clique aqui</Link>. Se
+        ainda não tiver uma conta, <Link to="/sign-up">faça seu cadastro.</Link>
       </p>
     </div>
   );
