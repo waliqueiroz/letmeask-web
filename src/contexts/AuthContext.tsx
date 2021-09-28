@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { WithAxios } from './WithAxios';
 
 import { setAuthorizationHeader } from '../services/api';
 import { login } from '../services/auth';
@@ -97,7 +98,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
         signOut,
       }}
     >
-      {children}
+      <WithAxios>{children}</WithAxios>
     </AuthContext.Provider>
   );
 };

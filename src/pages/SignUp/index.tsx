@@ -74,7 +74,7 @@ export const SignUp: React.FC = () => {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <Button type="submit">Criar sala</Button>
+        <Button type="submit">Cadastrar</Button>
       </form>
       <p className="main-footer">
         Quer entrar em uma sala existente? <Link to="/">Clique aqui</Link>

@@ -18,12 +18,17 @@ const RouterWrapper: React.FC<RouterWrapperProps> = ({
   component: Component,
   isPrivate,
   useAuthLayout,
+  path,
   ...rest
 }) => {
   const { signed, loading } = useAuth();
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (signed && path === '/login') {
+    return <Redirect to="/rooms/new" />;
   }
 
   if (!signed && isPrivate) {

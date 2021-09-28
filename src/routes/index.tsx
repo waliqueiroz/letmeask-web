@@ -14,8 +14,8 @@ const Routes: React.FC = () => {
     <Switch>
       <Route useAuthLayout path="/" exact component={Home} />
       <Route useAuthLayout path="/login" component={Login} />
-      <Route useAuthLayout path="/rooms/new" component={NewRoom} />
       <Route useAuthLayout path="/sign-up" component={SignUp} />
+      <Route isPrivate useAuthLayout path="/rooms/new" component={NewRoom} />
       <Route path="/rooms/:id" component={Room} />
       <Route isPrivate path="/admin/rooms/:id" component={AdminRoom} />
     </Switch>

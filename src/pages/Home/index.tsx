@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
     <div className="main-content">
       <img className="logo-img" src={logoImg} alt="Letmeask" />
       <Link to="/login" className="create-room">
-        Faça login e crie a sua sala
+        Entre e crie a sua sala
       </Link>
       <div className="separator">ou entre em uma sala</div>
       <form className="main-form" onSubmit={handleJoinRoom}>
