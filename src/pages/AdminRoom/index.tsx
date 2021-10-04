@@ -33,7 +33,7 @@ export const AdminRoom: React.FC = () => {
     deleteQuestion,
     highlightQuestion,
     markQuestionAsAnswered,
-  } = useRoom(roomId);
+  } = useRoom(roomId, true);
 
   function handleEndRoom() {
     Swal.fire({

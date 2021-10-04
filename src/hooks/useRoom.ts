@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useHistory } from 'react-router-dom';
 import { useAuth } from './useAuth';
 
 import {
@@ -40,7 +41,7 @@ export type Room = {
   id: string;
   title: string;
   questions?: Question[];
-  author: string;
+  author: Author;
   endedAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -70,7 +71,8 @@ type useRoomData = {
   markQuestionAsAnswered: (questionId: string) => Promise<void>;
 };
 
-export function useRoom(roomId: string): useRoomData {
+export function useRoom(roomId: string, isAdmin = false): useRoomData {
+  const history = useHistory();
   const { user } = useAuth();
   const [room, setRoom] = useState<Room>({} as Room);
   const [questions, setQuestions] = useState<ParsedQuestion[]>([]);
@@ -81,12 +83,20 @@ export function useRoom(roomId: string): useRoomData {
       try {
         const data = await getRoom(roomId);
 
-        setRoom(data);
+        if (isAdmin) {
+          if (data.author.id !== user?.id) {
+            history.push(`/rooms/${roomId}`);
+          } else {
+            setRoom(data);
+          }
+        } else {
+          setRoom(data);
+        }
       } catch (error) {
         toast.error('Houve um erro ao recuperar as informações da sala');
       }
     })();
-  }, [roomId]);
+  }, [history, isAdmin, roomId, user?.id]);
 
   useEffect(() => {
     const roomQuestions: Question[] = room.questions ?? [];
