@@ -8,12 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import Routes from './routes';
 
 const App: React.FC = () => (
-  <AuthContextProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <AuthContextProvider>
       <Routes />
       <ToastContainer autoClose={3000} />
-    </BrowserRouter>
-  </AuthContextProvider>
+    </AuthContextProvider>
+  </BrowserRouter>
 );
 
 export default App;

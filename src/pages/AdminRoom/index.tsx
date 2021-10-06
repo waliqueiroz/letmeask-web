@@ -1,4 +1,4 @@
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
@@ -11,7 +11,7 @@ import answerImg from '../../assets/images/answer.svg';
 import { Button } from '../../components/Button';
 import { Question } from '../../components/Question';
 import { RoomCode } from '../../components/RoomCode';
-// import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { useRoom } from '../../hooks/useRoom';
 
 import '../../styles/room.scss';
@@ -21,7 +21,7 @@ type RoomParams = {
 };
 
 export const AdminRoom: React.FC = () => {
-  // const { user } = useAuth();
+  const { signOut } = useAuth();
   const history = useHistory();
   const params = useParams<RoomParams>();
   const roomId = params.id;
@@ -94,11 +94,16 @@ export const AdminRoom: React.FC = () => {
     <div id="page-room">
       <header>
         <div className="content">
-          <img src={logoImg} alt="Letmeask" />
+          <Link to="/">
+            <img src={logoImg} alt="Letmeask" />
+          </Link>
           <div>
             <RoomCode code={roomId} />
             <Button isOutlined onClick={() => handleEndRoom()}>
               Encerrar sala
+            </Button>
+            <Button isOutlined onClick={signOut}>
+              Sair
             </Button>
           </div>
         </div>

@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { FormEvent, useEffect, useState } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -19,12 +19,21 @@ type RoomParams = {
 };
 
 export const Room: React.FC = () => {
-  const { user } = useAuth();
+  const history = useHistory();
+  const { signed, user, signOut } = useAuth();
   const params = useParams<RoomParams>();
   const [newQuestion, setNewQuestion] = useState('');
   const roomId = params.id;
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const { questions, title, sendQuestion, likeQuestion } = useRoom(roomId);
+  const { questions, title, author, sendQuestion, likeQuestion } =
+    useRoom(roomId);
+
+  useEffect(() => {
+    if (signed && user?.id === author?.id) {
+      setIsAdmin(true);
+    }
+  }, [author?.id, signed, user?.id]);
 
   async function handleSendQuestion(event: FormEvent) {
     event.preventDefault();
@@ -60,8 +69,27 @@ export const Room: React.FC = () => {
     <div id="page-room">
       <header>
         <div className="content">
-          <img src={logoImg} alt="Letmeask" />
-          <RoomCode code={params.id} />
+          <Link to="/">
+            <img src={logoImg} alt="Letmeask" />
+          </Link>
+          <div>
+            <RoomCode code={params.id} />
+            {isAdmin && (
+              <Button
+                isOutlined
+                onClick={() => {
+                  history.push(`/admin/rooms/${roomId}`);
+                }}
+              >
+                Visão de admin
+              </Button>
+            )}
+            {signed && (
+              <Button isOutlined onClick={signOut}>
+                Sair
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 

@@ -60,6 +60,7 @@ export type ParsedQuestion = {
 type useRoomData = {
   questions: ParsedQuestion[];
   title: string;
+  author: Author;
   sendQuestion: (content: string) => Promise<void>;
   likeQuestion: (
     questionId: string,
@@ -179,6 +180,7 @@ export function useRoom(roomId: string, isAdmin = false): useRoomData {
   return {
     questions,
     title,
+    author: room.author,
     sendQuestion,
     likeQuestion,
     deleteQuestion,
