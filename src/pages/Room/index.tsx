@@ -21,10 +21,11 @@ type RoomParams = {
 export const Room: React.FC = () => {
   const history = useHistory();
   const { signed, user, signOut } = useAuth();
-  const params = useParams<RoomParams>();
   const [newQuestion, setNewQuestion] = useState('');
-  const roomId = params.id;
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const params = useParams<RoomParams>();
+  const roomId = params.id;
 
   const { questions, title, author, sendQuestion, likeQuestion } =
     useRoom(roomId);

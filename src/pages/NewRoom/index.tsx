@@ -28,7 +28,7 @@ export const NewRoom: React.FC = () => {
         avatar: user?.avatar as string,
       });
 
-      history.push(`/rooms/${data.id}`);
+      history.push(`/admin/rooms/${data.id}`);
     } catch (error) {
       toast.error('Houve um erro ao criar a sala.');
     }

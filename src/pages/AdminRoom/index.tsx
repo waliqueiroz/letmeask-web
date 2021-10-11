@@ -115,40 +115,47 @@ export const AdminRoom: React.FC = () => {
           {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
 
-        <div className="question-list">
-          {questions.map((question) => (
-            <Question
-              key={question.id}
-              content={question.content}
-              author={question.author}
-              isAnswered={question.isAnswered}
-              isHighlighted={question.isHighlighted}
-            >
-              {!question.isAnswered && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => handleCheckQuestionAsAnswered(question.id)}
-                  >
-                    <img src={checkImg} alt="Marcar pergunta como respondida" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleHighlightQuestion(question.id)}
-                  >
-                    <img src={answerImg} alt="Dar destaque à pergunta" />
-                  </button>
-                </>
-              )}
-              <button
-                type="button"
-                onClick={() => handleDeleteQuestion(question.id)}
+        {questions.length > 0 ? (
+          <div className="question-list">
+            {questions.map((question) => (
+              <Question
+                key={question.id}
+                content={question.content}
+                author={question.author}
+                isAnswered={question.isAnswered}
+                isHighlighted={question.isHighlighted}
               >
-                <img src={deleteImg} alt="Remover pergunta" />
-              </button>
-            </Question>
-          ))}
-        </div>
+                {!question.isAnswered && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleCheckQuestionAsAnswered(question.id)}
+                    >
+                      <img
+                        src={checkImg}
+                        alt="Marcar pergunta como respondida"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleHighlightQuestion(question.id)}
+                    >
+                      <img src={answerImg} alt="Dar destaque à pergunta" />
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleDeleteQuestion(question.id)}
+                >
+                  <img src={deleteImg} alt="Remover pergunta" />
+                </button>
+              </Question>
+            ))}
+          </div>
+        ) : (
+          <div>Nenhuma pergunta ainda. Divulgue o código da sala! :)</div>
+        )}
       </main>
     </div>
   );

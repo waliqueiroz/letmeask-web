@@ -13,6 +13,7 @@ export const RoomCode: React.FC<RoomCodeProps> = ({ code }) => {
 
   return (
     <button
+      title="Clique para copiar o código da sala"
       type="button"
       onClick={copyRoomCodeToClipboard}
       className="room-code"
